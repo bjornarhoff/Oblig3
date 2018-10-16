@@ -43,7 +43,39 @@ public class ObligSBinTre<T> implements Beholder<T>
     @Override
     public boolean leggInn(T verdi)
     {
-        throw new UnsupportedOperationException("Ikke kodet ennå!");
+        Objects.requireNonNull(verdi, "Ulovlig med nullverdier");
+
+        Node<T> p = rot;
+        Node<T> q = null;
+        int cmp = 0;        // Hjelpevariabel
+
+        while (p != null)     // Fortsetter til p  er ute av treet
+        {
+            q = p;              // q er foreldre til p
+            cmp = comp.compare(verdi, p.verdi);     // bruker komparatoren
+            p = cmp < 0 ? p.venstre : p.høyre;      // flytter p
+        }
+
+                    // p er nå null (ute av treet), q er den siste vi gikk igjennom
+
+         p = new Node <>(verdi, q);         // q er forelder til p
+
+        if (q == null)
+        {
+            rot = p;            // p blir rotnode
+
+        } else if (cmp < 0)
+        {
+            q.venstre = p;      // venstre barn til q
+        } else
+            {
+                q.høyre = p;        // høyre barn til q
+            }
+
+        antall++;           // Øker antall
+        endringer ++;       // Øker endringer
+        return true;
+
     }
 
     @Override
@@ -175,6 +207,34 @@ public class ObligSBinTre<T> implements Beholder<T>
         {
             throw new UnsupportedOperationException("Ikke kodet ennå!");
         }
-        
+
     } // BladnodeIterator
+
+
+
+
+                        /** MAIN METODE SOM MÅ FJERNES ETTER ENDT JOBBING */
+
+
+    public static void main(String[] args) {
+        // Tester at klassene er satt opp riktig
+        ObligSBinTre<String> tre = new ObligSBinTre<> (Comparator.naturalOrder());
+        System.out.println(tre.antall());
+
+        // Test av oppgave 1
+        Integer[] a = {4,7,2,9,5,10,8,1,3,6};
+        ObligSBinTre <Integer> tre1 = new ObligSBinTre<>(Comparator.naturalOrder());
+
+        for(int verdi : a)
+        {
+            tre1.leggInn(verdi);
+        }
+        System.out.println(tre.antall());  // Utskrift: 10
+    }
+
+
+
+
+
+
 } // ObligSBinTre
