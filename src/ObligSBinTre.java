@@ -127,14 +127,14 @@ public class ObligSBinTre<T> implements Beholder<T>
 
             if (cmp < 0)                // Sjekker om cmp er mindre enn null
             {
-                p = p.venstre;        
+                p = p.venstre;
 
             } else {
                 if (cmp == 0)
                 {
                     antallVerdi++;
-                    p = p.høyre;
                 }
+                p = p.høyre;
             }
          } return antallVerdi;
     }
@@ -255,21 +255,19 @@ public class ObligSBinTre<T> implements Beholder<T>
         }
         System.out.println(tre.antall());  // Utskrift: 10
 
-
+*/
         // Test av oppgave 2
 
         Integer[] a = {4,7,2,9,4,10,8,7,4,6};
         ObligSBinTre <Integer> tre = new ObligSBinTre<>(Comparator.naturalOrder());
 
-        for(int verdi : a) {
-            tre.leggInn(verdi);
-        }
+        for(int verdi : a) tre.leggInn(verdi);
         System.out.println(tre.antall());
         System.out.println(tre.antall(5));
         System.out.println(tre.antall(4));
         System.out.println(tre.antall(7));
         System.out.println(tre.antall(10));
-         */
+
     }
 
 
