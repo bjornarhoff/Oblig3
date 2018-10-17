@@ -67,6 +67,7 @@ public class ObligSBinTre<T> implements Beholder<T>
         } else if (cmp < 0)
         {
             q.venstre = p;      // venstre barn til q
+
         } else
             {
                 q.høyre = p;        // høyre barn til q
@@ -112,7 +113,30 @@ public class ObligSBinTre<T> implements Beholder<T>
 
     public int antall(T verdi)
     {
-        throw new UnsupportedOperationException("Ikke kodet ennå!");
+        if (verdi == null)   // Hvis verdi ikke finnes i treet, returner null
+        {
+            return 0;
+        }
+
+        Node<T> p = rot;        // Oppretter en rot node
+        int antallVerdi = 0;     // Hjelpevariabel
+
+        while (p != null)
+        {
+            int cmp = comp.compare(verdi,p.verdi);  // Bruker komparator
+
+            if (cmp < 0)                // Sjekker om cmp er mindre enn null
+            {
+                p = p.venstre;        
+
+            } else {
+                if (cmp == 0)
+                {
+                    antallVerdi++;
+                    p = p.høyre;
+                }
+            }
+         } return antallVerdi;
     }
 
     @Override
@@ -217,7 +241,7 @@ public class ObligSBinTre<T> implements Beholder<T>
 
 
     public static void main(String[] args) {
-        // Tester at klassene er satt opp riktig
+       /* // Tester at klassene er satt opp riktig
         ObligSBinTre<String> tre = new ObligSBinTre<> (Comparator.naturalOrder());
         System.out.println(tre.antall());
 
@@ -230,6 +254,22 @@ public class ObligSBinTre<T> implements Beholder<T>
             tre1.leggInn(verdi);
         }
         System.out.println(tre.antall());  // Utskrift: 10
+
+
+        // Test av oppgave 2
+
+        Integer[] a = {4,7,2,9,4,10,8,7,4,6};
+        ObligSBinTre <Integer> tre = new ObligSBinTre<>(Comparator.naturalOrder());
+
+        for(int verdi : a) {
+            tre.leggInn(verdi);
+        }
+        System.out.println(tre.antall());
+        System.out.println(tre.antall(5));
+        System.out.println(tre.antall(4));
+        System.out.println(tre.antall(7));
+        System.out.println(tre.antall(10));
+         */
     }
 
 
