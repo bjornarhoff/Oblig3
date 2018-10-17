@@ -123,20 +123,20 @@ public class ObligSBinTre<T> implements Beholder<T>
 
         while (p != null)
         {
-            int cmp = comp.compare(verdi,p.verdi);  // Bruker komparator
+            int cmp = comp.compare(verdi,p.verdi); //(verdi > p.verdi = 1) (verdi < p.verdi = -1) (verdi == p.verdi = 0)
 
             if (cmp < 0)                // Sjekker om cmp er mindre enn null
             {
-                p = p.venstre;
+                p = p.venstre;          // Sett rot  til rot sin venstre
 
             } else {
-                if (cmp == 0)
+                if (cmp == 0)           // Hvis verdi er lik cmp
                 {
-                    antallVerdi++;
+                    antallVerdi++;      // Øk antall
                 }
-                p = p.høyre;
+                p = p.høyre;            // Hvis større enn verdi, flytt til høyre
             }
-         } return antallVerdi;
+         } return antallVerdi;      // Returner verdi
     }
 
     @Override
