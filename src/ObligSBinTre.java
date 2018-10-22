@@ -134,7 +134,7 @@ public class ObligSBinTre<T> implements Beholder<T>
                 {
                     antallVerdi++;      // Øk antall
                 }
-                p = p.høyre;            // Hvis større enn verdi, flytt til høyre
+                p = p.høyre;            // Hvis cmp større enn verdi, flytt til høyre
             }
          } return antallVerdi;      // Returner verdi
     }
@@ -153,13 +153,50 @@ public class ObligSBinTre<T> implements Beholder<T>
 
     private static <T> Node<T> nesteInorden(Node<T> p)
     {
-        throw new UnsupportedOperationException("Ikke kodet ennå!");
+
+        if (p.høyre != null)
+        {
+            p = p.høyre;
+            
+            while (p.venstre != null)
+            {
+                p = p.venstre;
+            }
+        } else
+            {
+                while (p.forelder != null && p.forelder.høyre == p)
+                {
+                  p = p.forelder;
+                }
+
+           p = p.forelder;
+
+            }
+                return p;
     }
 
     @Override
     public String toString()
     {
-        throw new UnsupportedOperationException("Ikke kodet ennå!");
+        if (tom())
+        {
+            return "[]";
+        }
+        Node<T> p = rot;        // går til den første i inorden
+        while (p.venstre != null)
+        {
+            p = p.venstre;
+        }
+        StringJoiner s = new StringJoiner(", ", "[", "]");
+
+
+        while (p != null)
+        {
+            s.add(p.verdi.toString());
+            p = nesteInorden(p);
+        }
+
+        return s.toString();
     }
 
     public String omvendtString()
@@ -255,7 +292,7 @@ public class ObligSBinTre<T> implements Beholder<T>
         }
         System.out.println(tre.antall());  // Utskrift: 10
 
-*/
+
         // Test av oppgave 2
 
         Integer[] a = {4,7,2,9,4,10,8,7,4,6};
@@ -266,7 +303,14 @@ public class ObligSBinTre<T> implements Beholder<T>
         System.out.println(tre.antall(5));
         System.out.println(tre.antall(4));
         System.out.println(tre.antall(7));
-        System.out.println(tre.antall(10));
+        System.out.println(tre.antall(10)); */
+
+
+        // Test oppgave 3
+        int[] a = {4,7,2,9,4,10,8,7,4,6,1};
+        ObligSBinTre<Integer> tre = new ObligSBinTre<>(Comparator.naturalOrder());
+        for (int verdi : a) tre.leggInn(verdi);
+        System.out.println(tre);
 
     }
 
