@@ -201,7 +201,47 @@ public class ObligSBinTre<T> implements Beholder<T>
 
     public String omvendtString()
     {
-        throw new UnsupportedOperationException("Ikke kodet ennå!");
+        if (tom())
+        {
+            return "[]";
+        }
+
+        StringJoiner s = new StringJoiner(", ", "[", "]");
+
+        Stack<Node<T>> stack = new Stack<>();  // Oppretter en stack
+        Node<T> p = rot;            // Begynner i rot
+
+        while (p.høyre != null)     // Går lengst mot høyre
+        {
+            stack.push(p);      // Legger til p.verdi på stack
+            p = p.høyre;
+        }
+
+        s.add(p.verdi.toString());      // Legger p.verdi inn i tostring metoden
+
+        while (true)
+        {
+            if (p.venstre != null)      // Sjekker om venstre verdi er gyldig
+            {
+                p = p.venstre;          // Flytter p
+
+            while (p.høyre != null)     // Så lenge p.høyre ikke er null
+            {
+                stack.push(p);          // Legg til på stack
+                p = p.høyre;            // Flytt p
+                }
+
+            } else if(!stack.empty())       // Sjekker om stack er tom
+            {
+                p = stack.pop();            // Hent siste verdi i stack
+
+            } else break;
+
+            s.add(p.verdi.toString());   // Legger til i stringjoiner
+        }
+
+        return s.toString();        // Returnerer toString av stringjoiner
+
     }
 
     public String høyreGren()
@@ -303,14 +343,23 @@ public class ObligSBinTre<T> implements Beholder<T>
         System.out.println(tre.antall(5));
         System.out.println(tre.antall(4));
         System.out.println(tre.antall(7));
-        System.out.println(tre.antall(10)); */
+        System.out.println(tre.antall(10));
 
 
         // Test oppgave 3
         int[] a = {4,7,2,9,4,10,8,7,4,6,1};
         ObligSBinTre<Integer> tre = new ObligSBinTre<>(Comparator.naturalOrder());
         for (int verdi : a) tre.leggInn(verdi);
-        System.out.println(tre);
+        System.out.println(tre); */
+
+
+       // Test oppgave 4
+
+        int[] a = {4,7,2,9,4,10,8,7,4,6,1};
+        ObligSBinTre<Integer> tre = new ObligSBinTre<>(Comparator.naturalOrder());
+        for(int verdi : a) tre.leggInn(verdi);
+
+        System.out.println(tre.omvendtString());  // [10, 9, 8, 7, 7, 6, 4, 4,4, 2, 1]
 
     }
 
