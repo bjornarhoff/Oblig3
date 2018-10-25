@@ -97,7 +97,84 @@ public class ObligSBinTre<T> implements Beholder<T>
     @Override
     public boolean fjern(T verdi)
     {
-        throw new UnsupportedOperationException("Ikke kodet ennå!");
+        if (verdi == null || !inneholder(verdi))          // Sjekker etter nullverdier i treet
+        {
+            return false;
+        }
+
+        Node<T> p = rot;                // Oppretter rot node og forelder node q
+        Node<T> q = null;
+
+
+        while (p != null)           // leter etter verdi
+        {
+            int cmp = comp.compare(verdi, p.verdi);  // Sammenligner insatt verdi og p.verdi
+
+            if (cmp < 0)
+            {
+                q = p;
+                p = p.venstre;          // Går mot venstre
+            } else if (cmp > 0)
+            {
+                q = p;
+                p = p.høyre;           // Går mot høyre
+            } else {
+                break;              // Verdi er lik p.verdi
+            }
+        }
+
+            if (p == null)
+            {
+                return false;       // Finner ingen verdi
+            }
+
+            if (p.venstre == null || p.høyre == null)   // Sjekker om det er barn
+            {
+                Node<T> b = p.venstre != null ? p.venstre : p.høyre;  // b for barn
+                if (b != null)
+                {
+                    b.forelder = q;
+                }
+
+                if (b == rot)
+                {
+                    rot = b;
+                }else if (p == q.venstre)
+                {
+                    q.venstre = b;
+                } else {
+                    q.høyre = b;
+                }
+            }
+            else
+                {
+                    Node<T> s = p;
+                    Node<T> r = p.høyre;   // finner neste i inorden
+
+                    while (r.venstre != null)
+                    {
+                        s = r;    // s er forelder til r
+                        r = r.venstre;
+                    }
+                     p.verdi = r.verdi;   // kopierer verdien i r til p
+
+                    if (r.høyre != null)
+                    {
+                        r.høyre.forelder = s;
+                    }
+                    if (s != p)
+                    {
+                        s.venstre = r.høyre;
+                    }
+                    else {
+                        s.høyre = r.høyre;
+                    }
+                }
+
+            antall--;   // det er nå én node mindre i treet
+            endringer ++;
+            return true;
+
     }
 
     public int fjernAlle(T verdi)
