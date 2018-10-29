@@ -118,7 +118,7 @@ public class ObligSBinTre<T> implements Beholder<T>
             {
                 q = p;
                 p = p.høyre;           // Går mot høyre
-            } else {
+            } else if (cmp == 0){
                 break;              // Verdi er lik p.verdi
             }
         }
@@ -131,19 +131,21 @@ public class ObligSBinTre<T> implements Beholder<T>
             if (p.venstre == null || p.høyre == null)   // Sjekker om det er barn
             {
                 Node<T> b = p.venstre != null ? p.venstre : p.høyre;  // b for barn
-                if (b != null)
-                {
+
+                if (b != null) {
                     b.forelder = q;
                 }
 
-                if (b == rot)
+                if (p == rot)
                 {
                     rot = b;
+
                 } else if (p == q.venstre)
                 {
                     q.venstre = b;
 
-                } else {
+                } else
+                    {
                     q.høyre = b;
                 }
             }
@@ -180,8 +182,15 @@ public class ObligSBinTre<T> implements Beholder<T>
 
     public int fjernAlle(T verdi)
     {
-        
 
+        int antForekomster = 0;
+
+        while (fjern(verdi))
+        {
+            antForekomster++;
+        }
+
+        return antForekomster;
 
     }
 
@@ -228,7 +237,31 @@ public class ObligSBinTre<T> implements Beholder<T>
     @Override
     public void nullstill()
     {
-        throw new UnsupportedOperationException("Ikke kodet ennå!");
+
+        if (!tom()) {
+            nullstill(rot);
+        }
+        rot = null;
+        antall = 0;
+        endringer++;
+
+    }
+
+    private static <T> void nullstill (Node <T> p)
+    {
+        if (p.venstre != null)
+        {
+            nullstill(p.venstre);
+            p.venstre =null;
+        }
+
+        if (p.høyre != null)
+        {
+            nullstill(p.høyre);
+            p.høyre = null;
+        }
+
+        p.verdi = null;
     }
 
     private static <T> Node<T> nesteInorden(Node<T> p)
@@ -326,12 +359,72 @@ public class ObligSBinTre<T> implements Beholder<T>
 
     public String høyreGren()
     {
-        throw new UnsupportedOperationException("Ikke kodet ennå!");
+        StringJoiner sj = new StringJoiner(", ", "[", "]");
+        if (!tom())
+        {
+            Node <T> p = rot;
+
+            while (true)
+            {
+                sj.add(p.verdi.toString());
+
+              if (p.høyre != null)
+                {
+                    p = p.høyre;
+
+                } else if (p.venstre != null)
+                {
+                    p = p.venstre;
+                } else
+                    {
+                        break;
+                    }
+            }
+        } return sj.toString();
     }
 
     public String lengstGren()
     {
-        throw new UnsupportedOperationException("Ikke kodet ennå!");
+        if (tom())
+        {
+            return "[]";
+        }
+
+
+        Deque<Node<T>> kø = new LinkedList<>();
+
+         kø.add(rot);
+
+
+        Node<T> p = null;
+
+        while (!kø.isEmpty())
+        {
+
+            p = kø.getLast();
+            if (p.venstre != null) {
+                kø.add(p.venstre);
+                //kø.push(p.venstre);
+            }
+
+               else if (p.høyre != null) {
+                  kø.add(p.høyre);
+                    //kø.push(p.høyre);
+
+                }  else break;
+
+        }
+      // Når kommer hit er du ferdig med å traversere
+//        Stack<Node<T>> stk = new Stack<>();
+//
+//            while (p != null)
+//            {
+//                stk.push(p);
+//                p = p.forelder;
+//            }
+
+            return kø.toString();
+
     }
 
     public String[] grener()
@@ -430,7 +523,7 @@ public class ObligSBinTre<T> implements Beholder<T>
         int[] a = {4,7,2,9,4,10,8,7,4,6,1};
         ObligSBinTre<Integer> tre = new ObligSBinTre<>(Comparator.naturalOrder());
         for (int verdi : a) tre.leggInn(verdi);
-        System.out.println(tre); */
+        System.out.println(tre);
 
 
        // Test oppgave 4
@@ -439,7 +532,31 @@ public class ObligSBinTre<T> implements Beholder<T>
         ObligSBinTre<Integer> tre = new ObligSBinTre<>(Comparator.naturalOrder());
         for(int verdi : a) tre.leggInn(verdi);
 
-        System.out.println(tre.omvendtString());  // [10, 9, 8, 7, 7, 6, 4, 4,4, 2, 1]
+        System.out.println(tre.omvendtString());  // [10, 9, 8, 7, 7, 6, 4, 4,4, 2, 1] */
+
+       // Test oppgave 5
+      //  int[] a = {4,7,2,9,4,10,8,7,4,6,1};
+       // ObligSBinTre<Integer> tre = new ObligSBinTre<>(Comparator.naturalOrder());
+     //   for(int verdi : a) tre.leggInn(verdi);
+       // System.out.println(tre.fjernAlle(4)); tre.fjernAlle(7); tre.fjern(8);
+       // System.out.println(tre.antall());
+       // System.out.println(tre + ""+ tre.omvendtString());// [1, 2, 6, 9, 10] [10, 9, 6, 2, 1]// OBS: Hvis du ikke har gjort oppgave 4 kan du her bruke toString()
+
+        ObligSBinTre<String> tre2 = new ObligSBinTre<>(Comparator.naturalOrder());
+        char[] verdier = "IATBHJCRSOFELKGDMPQN".toCharArray();
+       // for(char c : verdier) tre2.leggInn(c);
+       tre2.leggInn("F");
+        tre2.leggInn("B");
+
+        String[] verdi1 = "AAAAAAAAAAAAAAAAAAAA".split("");
+        String[] verdi2 = "HDGOCEKPJMIL".split("");
+        for(String v: verdi1) tre2.leggInn(v);
+        for(String v: verdi2) tre2.leggInn(v);
+
+        System.out.println(tre2);
+
+        System.out.println(tre2.lengstGren());
+
 
     }
 
