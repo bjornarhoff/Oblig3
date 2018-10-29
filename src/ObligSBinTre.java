@@ -139,9 +139,10 @@ public class ObligSBinTre<T> implements Beholder<T>
                 if (b == rot)
                 {
                     rot = b;
-                }else if (p == q.venstre)
+                } else if (p == q.venstre)
                 {
                     q.venstre = b;
+
                 } else {
                     q.høyre = b;
                 }
@@ -158,7 +159,7 @@ public class ObligSBinTre<T> implements Beholder<T>
                     }
                      p.verdi = r.verdi;   // kopierer verdien i r til p
 
-                    if (r.høyre != null)
+                    if (r.høyre != null)                // Koden er endret her for å sette forelder
                     {
                         r.høyre.forelder = s;
                     }
@@ -179,7 +180,9 @@ public class ObligSBinTre<T> implements Beholder<T>
 
     public int fjernAlle(T verdi)
     {
-        throw new UnsupportedOperationException("Ikke kodet ennå!");
+        
+
+
     }
 
     @Override
