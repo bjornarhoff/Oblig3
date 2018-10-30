@@ -1,4 +1,6 @@
 import java.util.*;
+import java.util.function.Consumer;
+
 public class ObligSBinTre<T> implements Beholder<T>
 {
     private static final class Node<T> // en indre nodeklasse
@@ -383,7 +385,7 @@ public class ObligSBinTre<T> implements Beholder<T>
         } return sj.toString();
     }
 
-    public String lengstGren()
+    public String lengstGren2()
     {
         if (tom())
         {
@@ -398,32 +400,86 @@ public class ObligSBinTre<T> implements Beholder<T>
 
         Node<T> p = null;
 
-        while (!kø.isEmpty())
-        {
+        while (!kø.isEmpty()) {
 
             p = kø.getLast();
+
             if (p.venstre != null) {
                 kø.add(p.venstre);
-                //kø.push(p.venstre);
-            }
 
-               else if (p.høyre != null) {
-                  kø.add(p.høyre);
-                    //kø.push(p.høyre);
+            } else if (p.høyre != null) {
+                kø.add(p.høyre);
 
-                }  else break;
+
+            }  else break;
 
         }
-      // Når kommer hit er du ferdig med å traversere
-//        Stack<Node<T>> stk = new Stack<>();
-//
-//            while (p != null)
-//            {
-//                stk.push(p);
-//                p = p.forelder;
-//            }
 
             return kø.toString();
+
+    }
+
+    private  void preorden(Node<T> p, Consumer<T> c ){
+        c.accept(p.verdi);
+        if(p.venstre != null) preorden(p.venstre, c);
+        if(p.høyre != null) preorden(p.høyre, c);
+    }
+
+
+
+    public String lengstGren(){
+        if (tom())
+        {
+            return "[]";
+        }
+        Stack<Node<T>> stakk = new Stack<>();
+        List<String> liste = new ArrayList<>();
+        stakk.add(rot);
+        Node<T>  p = rot;
+        while (!stakk.isEmpty()){
+
+            if (p.venstre != null) {
+                p = p.venstre;
+                stakk.add(p);
+            }
+            else if  (p.høyre != null){
+                p = p.høyre;
+                stakk.add(p);
+            }
+
+           else {
+                liste.add(skrivut(rot, p ));
+                   p = stakk.pop();
+                   // Her skriver ut verdien til grenen
+
+                   while (p.forelder.høyre == null) p = stakk.pop();
+                   p = p.høyre;
+
+               }
+
+
+
+
+
+
+        }
+
+        return  liste.toString();
+
+    }
+
+    public String skrivut(Node<T> rot , Node<T> p  ){
+
+         Node<T> q = rot;
+        StringJoiner joiner = new StringJoiner("");
+        while(q != null){
+            joiner.add(String.valueOf(q.verdi));
+            int cmp = comp.compare(p.verdi, q.verdi);
+            q = cmp < 0 ? q.venstre : q.høyre;
+
+
+        }
+        return  joiner.toString();
 
     }
 
@@ -542,7 +598,7 @@ public class ObligSBinTre<T> implements Beholder<T>
        // System.out.println(tre.antall());
        // System.out.println(tre + ""+ tre.omvendtString());// [1, 2, 6, 9, 10] [10, 9, 6, 2, 1]// OBS: Hvis du ikke har gjort oppgave 4 kan du her bruke toString()
 
-        ObligSBinTre<String> tre2 = new ObligSBinTre<>(Comparator.naturalOrder());
+       /* ObligSBinTre<String> tre2 = new ObligSBinTre<>(Comparator.naturalOrder());
         char[] verdier = "IATBHJCRSOFELKGDMPQN".toCharArray();
        // for(char c : verdier) tre2.leggInn(c);
        tre2.leggInn("F");
@@ -555,10 +611,21 @@ public class ObligSBinTre<T> implements Beholder<T>
 
         System.out.println(tre2);
 
-        System.out.println(tre2.lengstGren());
+        System.out.println(tre2.lengstGren()); */
+
+
+        ObligSBinTre<Character> tre = new ObligSBinTre<>(Comparator.naturalOrder());
+        char[] verdier = "IATBHJCRSOFELKGDMPQN".toCharArray();
+        for(char c : verdier) tre.leggInn(c);
+        System.out.println(tre.høyreGren() + " "+ tre.lengstGren());
+
+        tre.lengstGren();
+
+
 
 
     }
+
 
 
 
