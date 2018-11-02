@@ -240,7 +240,8 @@ public class ObligSBinTre<T> implements Beholder<T>
     public void nullstill()
     {
 
-        if (!tom()) {
+        if (!tom())
+        {
             nullstill(rot);
         }
         rot = null;
@@ -578,7 +579,14 @@ public class ObligSBinTre<T> implements Beholder<T>
 
         private BladnodeIterator() // konstruktør
         {
-            throw new UnsupportedOperationException("Ikke kodet ennå!");
+            if (tom()) {
+                return;
+            }
+            p = firstLeafnode(rot);
+            q = null;
+            removeOK = false;
+            iteratorendringer = endringer;
+
         }
 
 
@@ -589,110 +597,60 @@ public class ObligSBinTre<T> implements Beholder<T>
         }
 
         @Override
-        public T next()
-        {
-            throw new UnsupportedOperationException("Ikke kodet ennå!");
+        public T next() {
+            if (!hasNext()) throw new NoSuchElementException("ikke flere bladnodeverdier.");
+
+            if (endringer != iteratorendringer) throw new ConcurrentModificationException("Treet har blit endret.");
+
+            removeOK = true;
+            q = p;
+            p = nextLeafnode(p);
+
+            return q.verdi;
+
+        }
+
+        private  <T> Node<T> nextLeafnode (Node<T> p){
+            Node<T> fa = p.forelder;
+            while (fa !=null && (p== fa.høyre || fa.høyre == null)){
+                p= fa;
+                fa = fa.forelder;
+            }
+            return fa == null ? null : firstLeafnode(fa.høyre);
         }
 
         @Override
         public void remove()
         {
-            throw new UnsupportedOperationException("Ikke kodet ennå!");
+            if (!removeOK){
+                throw new IllegalStateException("Ulovlig kall pa metoden remove");
+            }
+
+            if (endringer != iteratorendringer){
+                throw new ConcurrentModificationException("Treet har blitt endret");
+            }
+
+
+            removeOK = false;
+
+            Node<T> fa = q.forelder;
+
+            if (fa == null)
+            {
+                rot = null;
+            }
+            else if (q == fa.venstre) {
+                fa.venstre = null;
+            }
+            else {
+                fa.høyre = null;
+            }
+
+            antall--;
+            endringer++;
+            iteratorendringer++;
         }
 
     } // BladnodeIterator
-
-
-
-
-                        /** MAIN METODE SOM MÅ FJERNES ETTER ENDT JOBBING */
-
-
-    public static void main(String[] args) {
-       /* // Tester at klassene er satt opp riktig
-        ObligSBinTre<String> tre = new ObligSBinTre<> (Comparator.naturalOrder());
-        System.out.println(tre.antall());
-
-        // Test av oppgave 1
-        Integer[] a = {4,7,2,9,5,10,8,1,3,6};
-        ObligSBinTre <Integer> tre1 = new ObligSBinTre<>(Comparator.naturalOrder());
-
-        for(int verdi : a)
-        {
-            tre1.leggInn(verdi);
-        }
-        System.out.println(tre.antall());  // Utskrift: 10
-
-
-        // Test av oppgave 2
-
-        Integer[] a = {4,7,2,9,4,10,8,7,4,6};
-        ObligSBinTre <Integer> tre = new ObligSBinTre<>(Comparator.naturalOrder());
-
-        for(int verdi : a) tre.leggInn(verdi);
-        System.out.println(tre.antall());
-        System.out.println(tre.antall(5));
-        System.out.println(tre.antall(4));
-        System.out.println(tre.antall(7));
-        System.out.println(tre.antall(10));
-
-
-        // Test oppgave 3
-        int[] a = {4,7,2,9,4,10,8,7,4,6,1};
-        ObligSBinTre<Integer> tre = new ObligSBinTre<>(Comparator.naturalOrder());
-        for (int verdi : a) tre.leggInn(verdi);
-        System.out.println(tre);
-
-
-       // Test oppgave 4
-
-        int[] a = {4,7,2,9,4,10,8,7,4,6,1};
-        ObligSBinTre<Integer> tre = new ObligSBinTre<>(Comparator.naturalOrder());
-        for(int verdi : a) tre.leggInn(verdi);
-
-        System.out.println(tre.omvendtString());  // [10, 9, 8, 7, 7, 6, 4, 4,4, 2, 1] */
-
-       // Test oppgave 5
-      //  int[] a = {4,7,2,9,4,10,8,7,4,6,1};
-       // ObligSBinTre<Integer> tre = new ObligSBinTre<>(Comparator.naturalOrder());
-     //   for(int verdi : a) tre.leggInn(verdi);
-       // System.out.println(tre.fjernAlle(4)); tre.fjernAlle(7); tre.fjern(8);
-       // System.out.println(tre.antall());
-       // System.out.println(tre + ""+ tre.omvendtString());// [1, 2, 6, 9, 10] [10, 9, 6, 2, 1]// OBS: Hvis du ikke har gjort oppgave 4 kan du her bruke toString()
-
-       /* ObligSBinTre<String> tre2 = new ObligSBinTre<>(Comparator.naturalOrder());
-        char[] verdier = "IATBHJCRSOFELKGDMPQN".toCharArray();
-       // for(char c : verdier) tre2.leggInn(c);
-       tre2.leggInn("F");
-        tre2.leggInn("B");
-
-        String[] verdi1 = "AAAAAAAAAAAAAAAAAAAA".split("");
-        String[] verdi2 = "HDGOCEKPJMIL".split("");
-        for(String v: verdi1) tre2.leggInn(v);
-        for(String v: verdi2) tre2.leggInn(v);
-
-        System.out.println(tre2);
-
-        System.out.println(tre2.lengstGren()); */
-
-
-        ObligSBinTre<Character> tre = new ObligSBinTre<>(Comparator.naturalOrder());
-        char[] verdier = "IATBHJCRSOFELKGDMPQN".toCharArray();
-        for(char c : verdier) tre.leggInn(c);
-        System.out.println(tre.høyreGren() + " "+ tre.lengstGren());
-
-        //tre.lengstGren();
-        System.out.println(tre.lengstGren());
-
-
-
-
-    }
-
-
-
-
-
-
 
 } // ObligSBinTre
