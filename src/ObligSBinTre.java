@@ -1,5 +1,4 @@
 import java.util.*;
-import java.util.function.Consumer;
 
 public class ObligSBinTre<T> implements Beholder<T>
 {
@@ -573,7 +572,7 @@ public class ObligSBinTre<T> implements Beholder<T>
     private class BladnodeIterator implements Iterator<T>
     {
         private Node<T> p = rot, q = null;
-        private boolean removeOK = false;
+        private boolean fjernOK = false;
         private int iteratorendringer = endringer;
 
 
@@ -584,7 +583,7 @@ public class ObligSBinTre<T> implements Beholder<T>
             }
             p = firstLeafnode(rot);
             q = null;
-            removeOK = false;
+            fjernOK = false;
             iteratorendringer = endringer;
 
         }
@@ -598,11 +597,11 @@ public class ObligSBinTre<T> implements Beholder<T>
 
         @Override
         public T next() {
-            if (!hasNext()) throw new NoSuchElementException("ikke flere bladnodeverdier.");
+            if (!hasNext()) throw new NoSuchElementException("Ikke flere bladnodeverdier");
 
             if (endringer != iteratorendringer) throw new ConcurrentModificationException("Treet har blit endret.");
 
-            removeOK = true;
+            fjernOK = true;
             q = p;
             p = nextLeafnode(p);
 
@@ -622,16 +621,16 @@ public class ObligSBinTre<T> implements Beholder<T>
         @Override
         public void remove()
         {
-            if (!removeOK){
-                throw new IllegalStateException("Ulovlig kall pa metoden remove");
+            if (!fjernOK){
+                throw new IllegalStateException("Ikke lov med remove kall");
             }
 
             if (endringer != iteratorendringer){
-                throw new ConcurrentModificationException("Treet har blitt endret");
+                throw new ConcurrentModificationException("Endring på treet er gjort");
             }
 
 
-            removeOK = false;
+            fjernOK = false;
 
             Node<T> fa = q.forelder;
 
